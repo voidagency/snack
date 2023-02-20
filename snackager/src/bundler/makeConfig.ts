@@ -43,7 +43,7 @@ export default ({
       minimize: true,
       // Explicitly configure the Terser plugin to not generate "bundle.js.LICENSE.txt" files
       // https://stackoverflow.com/questions/64818489/webpack-omit-creation-of-license-txt-files
-      minimizer: [new TerserPlugin({ extractComments: false })],
+      // minimizer: [new TerserPlugin({ extractComments: false })],
     },
     plugins: [
       new webpack.DefinePlugin({
