@@ -1,6 +1,9 @@
 import { SnackOptions } from 'snack-sdk';
 
 const defaults: SnackOptions = {
+  snackagerURL: process?.env?.NEXT_PUBLIC_SNACKAGER_URL ?? null,
+  webPlayerURL: process?.env?.NEXT_PUBLIC_WEBPLAYER_URL ?? null,
+  apiURL: process?.env?.NEXT_PUBLIC_API_URL ?? null,
   codeChangesDelay: 500,
   files: {
     'App.js': {
