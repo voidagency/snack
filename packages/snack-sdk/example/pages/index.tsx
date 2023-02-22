@@ -4,15 +4,21 @@ import { useState, useEffect, useRef } from 'react';
 import { StyleSheet, css } from 'aphrodite';
 import { Snack, getSupportedSDKVersions, SDKVersion } from 'snack-sdk';
 import Head from 'next/head';
-
+import dynamic from 'next/dynamic';
 import createWorkerTransport from '../components/transports/createWorkerTransport';
 import { Button } from '../components/Button';
 import { Toolbar } from '../components/Toolbar';
 import defaults from '../components/Defaults';
+import '@uiw/react-textarea-code-editor/dist.css';
 
 const INITIAL_CODE_CHANGES_DELAY = 500;
 const VERBOSE = !!process.browser;
 const USE_WORKERS = true;
+
+const CodeEditor = dynamic(
+  () => import('@uiw/react-textarea-code-editor').then((mod) => mod.default),
+  { ssr: false }
+);
 
 export default function Home() {
   const webPreviewRef = useRef(null);
@@ -72,7 +78,27 @@ export default function Home() {
       </Head>
       <div className={css(styles.left)}>
         <Toolbar title="Code" />
-        <textarea
+        <CodeEditor
+          value={files['App.js'].contents as string}
+          language="jsx"
+          placeholder="Please enter JS code."
+          onChange={(event) =>
+            snack.updateFiles({
+              'App.js': {
+                type: 'CODE',
+                contents: event.target.value,
+              },
+            })
+          }
+          padding={15}
+          style={{
+            fontSize: 12,
+            backgroundColor: '#f5f5f5',
+            fontFamily:
+              'ui-monospace,SFMono-Regular,SF Mono,Consolas,Liberation Mono,Menlo,monospace',
+          }}
+        />
+        {/* <textarea
           className={css(styles.code)}
           value={files['App.js'].contents as string}
           onChange={(event) =>
@@ -83,7 +109,7 @@ export default function Home() {
               },
             })
           }
-        />
+        /> */}
         <p>Open the Developer Console of your Browser to view logs.</p>
       </div>
       <div className={css(styles.preview)}>

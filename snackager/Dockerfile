@@ -1,8 +1,8 @@
-ARG node_version
+ARG node_version=18.14.1
 
 FROM node:${node_version}-alpine as dev
 
-RUN apk --no-cache add git openssh-client
+RUN apk --no-cache add git openssh-client bash
 
 # Workspace files
 WORKDIR /app
@@ -20,8 +20,10 @@ COPY snackager/src ./src
 COPY snackager/structure-tests ./structure-tests
 COPY snackager/package.json ./
 COPY snackager/.env-cmdrc.js ./
+COPY snackager/.env-cmdrc-void.js ./
 COPY snackager/tsconfig*.json ./
 COPY snackager/.eslint* ./
+COPY snackager/scripts ./scripts
 
 # Install dependencies
 RUN yarn install --frozen-lockfile --production=false
@@ -36,8 +38,11 @@ RUN yarn build
 
 # Snackager
 WORKDIR /app/snackager
-
-CMD ["yarn", "start"]
+ENV PATH /app/node_modules/.bin:/app/snackager/node_modules/.bin:$PATH
+RUN npm install --global npm@^8
+ENV NODE_OPTIONS=--openssl-legacy-provider
+# ENTRYPOINT [ "tail", "-f", "/dev/null" ]
+CMD ["yarn", "develop"]
 
 FROM dev as builder
 

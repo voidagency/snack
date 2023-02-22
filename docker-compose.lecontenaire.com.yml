@@ -1,0 +1,42 @@
+version: "3.4"
+services:
+  snackager:
+    build:
+      context: ./
+      dockerfile: snackager/Dockerfile
+      target: dev
+    restart: unless-stopped
+    networks:
+      - internal
+    ports:
+      - "3012:3012"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.expo_snackager_http.rule=Host(`snackager.lecontenaire.com`)"
+      - "traefik.http.routers.expo_snackager_http.entrypoints=http"
+      - "traefik.http.routers.expo_snackager_https.rule=Host(`snackager.lecontenaire.com`)"
+      - "traefik.http.routers.expo_snackager_https.entrypoints=https"
+      - "traefik.http.routers.expo_snackager_https.tls=true"
+      - "traefik.http.routers.expo_snackager_https.tls.certresolver=k8spreprodchallenge"
+      - "traefik.http.middlewares.expo_snackager_http_redirectscheme.redirectscheme.scheme=https"
+      - "traefik.http.middlewares.expo_snackager_http_redirectscheme.redirectscheme.permanent=true"
+      - "traefik.http.routers.expo_snackager_http.middlewares=expo_snackager_http_redirectscheme@docker"
+  cache:
+    container_name: "snackager_cache"
+    image: redis:6.2-alpine
+    restart: always
+    networks:
+      - internal
+    # ports:
+    #   - "6379:6379"
+    command: redis-server --save 20 1 --loglevel warning --requirepass eYVX7EwVmmxKPCDmwMtyKVge8oLd2t81
+    volumes:
+      - redis_cache:/data
+
+networks:
+  internal:
+    external: true
+
+volumes:
+  redis_cache:
+    driver: local
