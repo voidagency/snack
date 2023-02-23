@@ -21,6 +21,8 @@ services:
       - "traefik.http.middlewares.expo_snackager_http_redirectscheme.redirectscheme.scheme=https"
       - "traefik.http.middlewares.expo_snackager_http_redirectscheme.redirectscheme.permanent=true"
       - "traefik.http.routers.expo_snackager_http.middlewares=expo_snackager_http_redirectscheme@docker"
+    depends_on:
+      - cache
   cache:
     container_name: "snackager_cache"
     image: redis:6.2-alpine

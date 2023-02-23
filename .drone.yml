@@ -1,0 +1,30 @@
+name: default
+kind: pipeline
+type: docker
+
+steps:
+  - name: build
+    image: docker/compose:1.29.2
+    volumes:
+      - name: docker_sock
+        path: /var/run/docker.sock
+    commands:
+      - COMPOSE_DOCKER_CLI_BUILD=1 DOCKER_BUILDKIT=1 docker-compose --project-name vactory_snack -f docker-compose.lecontenaire.yml build
+  - name: publish
+    image: docker/compose:1.29.2
+    volumes:
+      - name: docker_sock
+        path: /var/run/docker.sock
+    when:
+      branch:
+        - develop
+        - master
+    depends_on:
+      - build
+    commands:
+      - COMPOSE_DOCKER_CLI_BUILD=1 DOCKER_BUILDKIT=1 docker-compose --project-name vactory_snack -f docker-compose.lecontenaire.yml stop
+      - COMPOSE_DOCKER_CLI_BUILD=1 DOCKER_BUILDKIT=1 docker-compose --project-name vactory_snack -f docker-compose.lecontenaire.yml up -d
+volumes:
+  - name: docker_sock
+    host:
+      path: /var/run/docker.sock
