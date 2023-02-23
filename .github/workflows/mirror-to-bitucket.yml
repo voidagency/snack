@@ -1,6 +1,6 @@
 
 name: Mirroring
-description: Mirror this github repository to bitbucket
+
 on:
   push:
     branches:
