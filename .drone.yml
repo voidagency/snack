@@ -18,7 +18,7 @@ steps:
     when:
       branch:
         - develop
-        - master
+        - main
     depends_on:
       - build
     commands:
