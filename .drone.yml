@@ -9,7 +9,7 @@ steps:
       - name: docker_sock
         path: /var/run/docker.sock
     commands:
-      - COMPOSE_DOCKER_CLI_BUILD=1 DOCKER_BUILDKIT=1 docker-compose --project-name vactory_snack -f docker-compose.lecontenaire.yml build
+      - COMPOSE_DOCKER_CLI_BUILD=1 DOCKER_BUILDKIT=1 docker-compose --project-name vactory_snack -f docker-compose.lecontenaire.com.yml build
   - name: publish
     image: docker/compose:1.29.2
     volumes:
@@ -22,8 +22,8 @@ steps:
     depends_on:
       - build
     commands:
-      - COMPOSE_DOCKER_CLI_BUILD=1 DOCKER_BUILDKIT=1 docker-compose --project-name vactory_snack -f docker-compose.lecontenaire.yml stop
-      - COMPOSE_DOCKER_CLI_BUILD=1 DOCKER_BUILDKIT=1 docker-compose --project-name vactory_snack -f docker-compose.lecontenaire.yml up -d
+      - COMPOSE_DOCKER_CLI_BUILD=1 DOCKER_BUILDKIT=1 docker-compose --project-name vactory_snack -f docker-compose.lecontenaire.com.yml stop
+      - COMPOSE_DOCKER_CLI_BUILD=1 DOCKER_BUILDKIT=1 docker-compose --project-name vactory_snack -f docker-compose.lecontenaire.com.yml up -d
 volumes:
   - name: docker_sock
     host:
